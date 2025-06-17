@@ -1,10 +1,28 @@
+// NEW main.js with Navigation Logic
+
 document.addEventListener('DOMContentLoaded', () => {
-    const path = window.location.pathname;
-    if (path.includes('pricing.html')) {
-        handlePricingPage();
-    } else if (path.includes('account.html')) {
+    // --- NEW NAVIGATION LOGIC ---
+    // Get the current page path, e.g., "/pricing.html"
+    const currentPage = window.location.pathname;
+    // Find all the links in the navigation bar
+    const navLinks = document.querySelectorAll('.main-header nav a');
+
+    navLinks.forEach(link => {
+        // If a link's href matches the current page path, add the 'active' class
+        if (link.getAttribute('href') === currentPage) {
+            link.classList.add('active');
+        }
+    });
+    // --- END OF NAVIGATION LOGIC ---
+
+    // The rest of the page-specific logic
+    if (currentPage.includes('pricing.html') || currentPage === '/' || currentPage.endsWith('index.html')) {
+        const pricingContainer = document.querySelector('.pricing-container');
+        if(pricingContainer) handlePricingPage();
+    }
+    if (currentPage.includes('account.html')) {
         handleAccountPage();
-    } else if (path.includes('admin.html')) {
+    } else if (currentPage.includes('admin.html')) {
         handleAdminPage();
     }
 });
