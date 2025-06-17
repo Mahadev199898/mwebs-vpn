@@ -10,13 +10,50 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { background-color: var(--bg-color); color: var(--text-color); font-family: var(--font-body); overflow-x: hidden; min-height: 100vh; display: flex; flex-direction: column; }
 @keyframes move-twink-back { from {background-position:0 0;} to {background-position:-10000px 5000px;} }
-body::before { content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: transparent url(https://www.wearewebstars.com/assets/images/twinkling.png) repeat top center; z-index: -1; animation: move-twink-back 200s linear infinite; }
-body::after { content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #000 url(https://www.wearewebstars.com/assets/images/stars.png) repeat top center; z-index: -2; }
-.container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; width: 100%; flex-grow: 1; }
-.main-header { display: flex; justify-content: space-between; align-items: center; padding: 2rem 0; }
+body::before { content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: transparent url(https://www.wearewebstars.com/assets/images/twinkling.png) repeat top center; z-index: -2; animation: move-twink-back 200s linear infinite; }
+body::after { content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #000 url(https://www.wearewebstars.com/assets/images/stars.png) repeat top center; z-index: -3; }
+
+/* --- NEW NAVIGATION STYLES --- */
+.main-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background: rgba(5, 2, 20, 0.5);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(0, 255, 255, 0.2);
+    width: 100%;
+    left: 0;
+    transition: padding 0.3s ease;
+}
 .logo { font-family: var(--font-heading); font-size: 1.8rem; font-weight: 700; color: var(--primary-accent); text-shadow: 0 0 5px var(--primary-accent); text-decoration: none; }
-.main-header nav a { color: var(--text-color); text-decoration: none; margin-left: 2rem; font-weight: 500; transition: color 0.3s, text-shadow 0.3s; }
-.main-header nav a:hover { color: var(--primary-accent); text-shadow: 0 0 5px var(--primary-accent); }
+.main-header nav a {
+    color: var(--text-color);
+    text-decoration: none;
+    margin-left: 2rem;
+    font-weight: 500;
+    padding: 10px 0;
+    border-bottom: 2px solid transparent;
+    transition: color 0.3s, text-shadow 0.3s, border-bottom-color 0.3s;
+}
+.main-header nav a:hover {
+    color: var(--primary-accent);
+    text-shadow: 0 0 8px var(--primary-accent);
+    border-bottom-color: var(--primary-accent);
+}
+/* Style for the currently active page link */
+.main-header nav a.active {
+    color: var(--primary-accent);
+    font-weight: bold;
+    text-shadow: 0 0 10px var(--primary-accent);
+    border-bottom-color: var(--primary-accent);
+}
+/* --- END OF NAVIGATION STYLES --- */
+
+.container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; width: 100%; flex-grow: 1; }
 main { padding: 4rem 0; text-align: center; }
 h1, h2 { font-family: var(--font-heading); color: var(--primary-accent); text-shadow: 0 0 8px var(--primary-accent); margin-bottom: 1.5rem; }
 h3 {font-family: var(--font-heading); color: var(--primary-accent); margin-bottom: 1rem;}
@@ -31,7 +68,8 @@ p { line-height: 1.6; margin-bottom: 1rem; max-width: 700px; margin-left: auto; 
 #admin-table th, #admin-table td { border: 1px solid rgba(0, 255, 255, 0.2); padding: 0.75rem; text-align: left; }
 #admin-table th { font-family: var(--font-heading); color: var(--primary-accent); }
 .main-footer { text-align: center; padding: 2rem 0; border-top: 1px solid rgba(0, 255, 255, 0.2); margin-top: 4rem; width: 100%; }
-.main-footer a { color: var(--primary-accent); text-decoration: none; }
+.main-footer a { color: var(--text-color); text-decoration: none; margin: 0 10px; }
+.main-footer a:hover { color: var(--primary-accent); }
 .pricing-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 3rem; }
 .plan-tier { background: var(--card-bg); border: 1px solid rgba(0, 255, 255, 0.2); padding: 2rem; backdrop-filter: blur(5px); display: flex; flex-direction: column; text-align: center; }
 .plan-tier.popular { border-color: var(--primary-accent); transform: scale(1.05); box-shadow: 0 0 25px rgba(0, 255, 255, 0.2); }
