@@ -1,5 +1,3 @@
-// NEW and IMPROVED server.js
-
 require('dotenv').config();
 const express = require('express');
 const path = require('path');
@@ -43,23 +41,21 @@ app.post('/api/create-payment', async (req, res) => {
 
         const responseBody = await nowPaymentsResponse.json();
 
-        // --- NEW DEBUGGING LOGS ---
+        // --- DEBUGGING LOGS ---
         console.log("--- Attempting to create payment ---");
         console.log("NOWPayments API Response Status:", nowPaymentsResponse.status);
         console.log("NOWPayments API Response Body:", JSON.stringify(responseBody, null, 2));
         console.log("--- End of payment attempt ---");
-        // --- END OF NEW DEBUGGING LOGS ---
+        // --- END OF DEBUGGING LOGS ---
 
         if (!nowPaymentsResponse.ok) {
-            // If the response status is not successful, throw an error with the message from NOWPayments
             throw new Error(responseBody.message || 'NOWPayments API returned an error.');
         }
         
-        // If we are here, the response was OK. Send the invoice back to the frontend.
         res.status(200).json(responseBody);
 
     } catch (error) {
-        console.error("Error in /api/create-payment:", error);
+        console.error("Error in /api/create-payment:", error.message);
         res.status(500).json({ error: error.message || 'Failed to create payment invoice.' });
     }
 });
@@ -67,7 +63,6 @@ app.post('/api/create-payment', async (req, res) => {
 // Webhook endpoint for NOWPayments to call
 app.post('/api/payment-callback', async (req, res) => {
     const ipnHeader = req.headers['x-nowpayments-sig'];
-
     const { payment_status, payment_id, order_description } = req.body;
 
     if (payment_status === 'finished') {
@@ -108,4 +103,32 @@ app.get('/api/get-key', async (req, res) => {
     const { email } = req.query; 
     if (!email) return res.status(400).json({ error: 'Email required' });
     try {
-        const { rows } = await db.query('SELECT * FROM subscriptions WHERE email = $1 ORDER BY start_date DESC LIMIT
+        const { rows } = await db.query('SELECT * FROM subscriptions WHERE email = $1 ORDER BY start_date DESC LIMIT 1', [email]);
+        if (rows.length > 0) {
+            res.json(rows[0]);
+        } else {
+            res.status(404).json({ error: 'No subscription found for this email.' });
+        }
+    } catch (error) {
+        console.error("Database query error in /api/get-key:", error);
+        res.status(500).json({ error: 'Database error.' });
+    }
+});
+
+
+// Endpoint for the admin panel
+app.get('/api/get-all-users', async (req, res) => {
+    try {
+        const { rows } = await db.query('SELECT * FROM subscriptions ORDER BY start_date DESC');
+        res.json(rows);
+    } catch (error) {
+        console.error("Database query error in /api/get-all-users:", error);
+        res.status(500).json({ error: 'Database error.' });
+    }
+});
+
+
+// --- Start Server ---
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
