@@ -1,3 +1,5 @@
+// FINAL CORRECTED server.js
+
 require('dotenv').config();
 const express = require('express');
 const path = require('path');
@@ -51,23 +53,34 @@ app.post('/api/payment-callback', async (req, res) => {
     const { payment_status, payment_id, order_description } = req.body;
     if (payment_status === 'finished') {
         try {
-            const [planDetails, email, serverDetails] = order_description.split(' for ');
-            const [planName, duration] = planDetails.split(' - ');
-            const serverLocation = serverDetails.split(' on ')[1];
+            // --- THIS IS THE CORRECTED LOGIC ---
+            const parts = order_description.split(' on ');
+            const serverLocation = parts[1];
+            const main_parts = parts[0].split(' for ');
+            const email = main_parts[1];
+            const plan_parts = main_parts[0].split(' - ');
+            const planName = plan_parts[0];
+            const duration = plan_parts[1];
+            // --- END OF CORRECTED LOGIC ---
+
             const outlineApiUrl = OUTLINE_SERVERS[serverLocation];
             if (!outlineApiUrl) throw new Error(`Invalid server location: ${serverLocation}`);
+
             const createKeyResponse = await fetch(`${outlineApiUrl}/access-keys`, { method: 'POST' });
             if (!createKeyResponse.ok) throw new Error('Failed to create key on Outline server.');
             const keyData = await createKeyResponse.json();
+            
             await fetch(`${outlineApiUrl}/access-keys/${keyData.id}/name`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name: `${email}-${planName}` })
             });
+
             const endDate = new Date();
             if (duration === 'Monthly') endDate.setMonth(endDate.getMonth() + 1);
             else if (duration === '6 Months') endDate.setMonth(endDate.getMonth() + 6);
             else if (duration === 'Yearly') endDate.setFullYear(endDate.getFullYear() + 1);
+            
             await db.query(
                 'INSERT INTO subscriptions (email, access_key, plan_name, plan_duration, server_location, end_date, payment_id) VALUES ($1, $2, $3, $4, $5, $6, $7)',
                 [email, keyData.accessUrl, planName, duration, serverLocation, endDate, payment_id.toString()]
@@ -123,7 +136,7 @@ async function cleanupExpiredKeys() {
                     console.log(`Successfully deleted key ${keyId} from Outline server for ${sub.email}.`);
                     await db.query("UPDATE subscriptions SET plan_duration = 'Expired' WHERE id = $1", [sub.id]);
                 } else {
-                    console.error(`Failed to delete key ${keyId} for ${sub.email}. Status: ${deleteResponse.status}`);
+                    console.error(`Failed to delete key ${keyId} for user ${sub.email}. Status: ${deleteResponse.status}`);
                 }
             }
         }
