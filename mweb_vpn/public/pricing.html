@@ -5,47 +5,68 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pricing - MWEBS</title>
     <link rel="stylesheet" href="/css/style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&family=Exo+2:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&family=Exo+2:wght@300;400;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
         <header class="main-header">
             <a href="/" class="logo">MWEBS_</a>
             <nav>
-                <a href="/#features">Features</a>
-                <a href="/pricing.html">Pricing</a>
+                <a href="/how-to-use.html">How To Use</a>
                 <a href="/account.html">My Account</a>
             </nav>
         </header>
 
         <main>
             <h2>Choose Your Transmission</h2>
-            <p>Select a plan to secure your connection. All plans feature our full suite of privacy tools and warp-speed access.</p>
+            <p>All plans are a one-time payment for the selected duration. Your connection to the future starts here.</p>
             
-            <div class="card-grid">
-                <div class="card">
-                    <h3>Lunar Cycle</h3>
-                    <div class="price">$5<span>/month</span></div>
-                    <ul>
-                        <li>High-Speed Connection</li>
-                        <li>Stealth Shield Encryption</li>
-                        <li>Multi-Verse Device Access</li>
-                        <li>24/7 Anomaly Support</li>
-                    </ul>
-                    <div class="button-wrapper">
-                        <div id="payment-form"></div>
-                    </div>
+            <div class="pricing-container">
+                <div class="plan-tier">
+                    <h3>Scout Plan</h3>
+                    <p class="plan-devices">2 Devices</p>
+                    <div class="duration-option" data-plan-name="Scout Plan" data-duration="Monthly" data-price="4.00"><span class="duration">Monthly</span><span class="price">$4</span></div>
+                    <div class="duration-option" data-plan-name="Scout Plan" data-duration="6 Months" data-price="20.00"><span class="duration">6 Months</span><span class="price">$20</span></div>
+                    <div class="duration-option" data-plan-name="Scout Plan" data-duration="Yearly" data-price="35.00"><span class="duration">Yearly</span><span class="price">$35</span></div>
+                </div>
+                <div class="plan-tier popular">
+                    <h3>Guardian Plan</h3>
+                    <p class="plan-devices">4 Devices</p>
+                    <div class="duration-option" data-plan-name="Guardian Plan" data-duration="Monthly" data-price="6.00"><span class="duration">Monthly</span><span class="price">$6</span></div>
+                    <div class="duration-option" data-plan-name="Guardian Plan" data-duration="6 Months" data-price="30.00"><span class="duration">6 Months</span><span class="price">$30</span></div>
+                    <div class="duration-option" data-plan-name="Guardian Plan" data-duration="Yearly" data-price="50.00"><span class="duration">Yearly</span><span class="price">$50</span></div>
+                </div>
+                <div class="plan-tier">
+                    <h3>Vanguard Plan</h3>
+                    <p class="plan-devices">6 Devices</p>
+                    <div class="duration-option" data-plan-name="Vanguard Plan" data-duration="Monthly" data-price="8.00"><span class="duration">Monthly</span><span class="price">$8</span></div>
+                    <div class="duration-option" data-plan-name="Vanguard Plan" data-duration="6 Months" data-price="40.00"><span class="duration">6 Months</span><span class="price">$40</span></div>
+                    <div class="duration-option" data-plan-name="Vanguard Plan" data-duration="Yearly" data-price="70.00"><span class="duration">Yearly</span><span class="price">$70</span></div>
+                </div>
+            </div>
+
+            <div id="checkout-modal" class="modal">
+                <div class="modal-content">
+                    <span class="close-button">&times;</span>
+                    <h3>Final Confirmation</h3>
+                    <p id="modal-summary">Confirm your plan details.</p>
+                    <label for="server-location">Choose Server Location:</label>
+                    <select id="server-location">
+                        <option value="USA">USA</option>
+                        <option value="Germany">Germany</option>
+                        <option value="Singapore">Singapore</option>
+                    </select>
+                    <label for="email-input">Enter Your Email:</label>
+                    <input type="email" id="email-input" placeholder="you@example.com" required>
+                    <button id="confirm-payment-button" class="cta-button">Proceed to Payment</button>
                 </div>
             </div>
         </main>
     </div>
 
     <footer class="main-footer">
-        <p>&copy; 2025 MWEBS. All Rights Reserved. The Future is Secure.</p>
+        <p>&copy; 2025 MWEBS. All Rights Reserved. The Future is Secure. | <a href="mailto:support@mwebs.io">Support</a></p>
     </footer>
-
     <script src="/js/main.js"></script>
 </body>
 </html>
