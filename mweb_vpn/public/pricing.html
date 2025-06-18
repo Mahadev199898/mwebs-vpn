@@ -45,9 +45,7 @@
             <div class="content-section">
                 <h2>Feature Comparison</h2>
                 <table class="comparison-table">
-                    <thead>
-                        <tr><th>Feature</th><th>Scout Plan</th><th>Guardian Plan</th><th>Vanguard Plan</th></tr>
-                    </thead>
+                    <thead><tr><th>Feature</th><th>Scout Plan</th><th>Guardian Plan</th><th>Vanguard Plan</th></tr></thead>
                     <tbody>
                         <tr><td>Simultaneous Devices</td><td>2</td><td>4</td><td>6</td></tr>
                         <tr><td>Server Locations</td><td class="checkmark">✓</td><td class="checkmark">✓</td><td class="checkmark">✓</td></tr>
@@ -69,7 +67,7 @@
             <div class="content-section">
                 <h2>Frequently Asked Questions</h2>
                 <div class="faq-item"><h4>Is this a recurring subscription?</h4><p>No. All plans are a one-time payment for the duration selected. Your key will simply expire at the end of the term. You can purchase a new plan at any time.</p></div>
-                <div class="faq-item"><h4>What cryptocurrencies do you accept?</h4><p>We accept a wide range of popular cryptocurrencies, including BTC, ETH, USDT, USDC, BNB, and SOL through our secure payment partners.</p></div>
+                <div class="faq-item"><h4>What cryptocurrencies do you accept?</h4><p>We accept a wide range of popular cryptocur. Our secure payment partners handle the transaction.</p></div>
                 <div class="faq-item"><h4>What is Outline?</h4><p>Outline is a free and open-source software that provides a secure and reliable way to run your own VPN server. We use it to provide you with your personal access key.</p></div>
             </div>
 
@@ -86,7 +84,8 @@
                     </select>
                     <label for="email-input">Enter Your Email:</label>
                     <input type="email" id="email-input" placeholder="you@example.com" required>
-                    <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                    <p style="text-align: center; font-size: 0.9rem; margin-top: 1.5rem; opacity: 0.7;">Choose your payment method:</p>
+                    <div style="display: flex; gap: 1rem; margin-top: 0.5rem;">
                         <button id="nowpayments-pay-button" class="cta-button" style="flex: 1;">Pay with Crypto</button>
                         <button id="freekassa-pay-button" class="cta-button" style="flex: 1;">Pay with FreeKassa</button>
                     </div>
@@ -94,15 +93,9 @@
             </div>
         </main>
     </div>
-
     <footer class="main-footer">
         <p>&copy; 2025 MWEBS. All Rights Reserved. The Future is Secure.</p>
-        <p style="margin-top: 1rem; opacity: 0.8;">
-            <a href="/terms.html">Terms of Service</a> | 
-            <a href="/privacy.html">Privacy Policy</a> | 
-            <a href="/refund.html">Refund Policy</a> | 
-            <a href="mailto:support@mwebs.io">Support</a>
-        </p>
+        <p style="margin-top: 1rem; opacity: 0.8;"><a href="/terms.html" style="color: var(--text-color);">Terms of Service</a> | <a href="/privacy.html" style="color: var(--text-color);">Privacy Policy</a> | <a href="/refund.html" style="color: var(--text-color);">Refund Policy</a> | <a href="mailto:support@mwebs.io" style="color: var(--text-color);">Support</a></p>
     </footer>
     <script src="/js/main.js"></script>
 </body>
