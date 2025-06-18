@@ -5,7 +5,6 @@ const https = require('https');
 const db = require('./database');
 const fetch = require('node-fetch');
 const cron = require('node-cron');
-const crypto = require('crypto');
 
 const app = express();
 const PORT = process.env.PORT || 10000;
@@ -24,9 +23,6 @@ const OUTLINE_SERVERS = {
     "Singapore": process.env.OUTLINE_API_URL_SINGAPORE
 };
 const NOWPAYMENTS_API_KEY = process.env.NOWPAYMENTS_API_KEY;
-const FREEKASSA_MERCHANT_ID = process.env.FREEKASSA_MERCHANT_ID;
-const FREEKASSA_SECRET_WORD_1 = process.env.FREEKASSA_SECRET_WORD_1;
-const FREEKASSA_SECRET_WORD_2 = process.env.FREEKASSA_SECRET_WORD_2;
 
 async function createSubscription(orderDescription, paymentId) {
     try {
@@ -37,18 +33,18 @@ async function createSubscription(orderDescription, paymentId) {
         const plan_parts = main_parts[0].split(' - ');
         const planName = plan_parts[0];
         const duration = plan_parts[1];
-
+        
         const outlineApiUrl = OUTLINE_SERVERS[serverLocation];
         if (!outlineApiUrl) throw new Error(`Invalid server location: ${serverLocation}`);
 
         const createKeyResponse = await fetch(`${outlineApiUrl}/access-keys`, { method: 'POST', agent: httpsAgent });
-        if (!createKeyResponse.ok) throw new Error('Failed to create key on Outline server.');
+        if (!createKeyResponse.ok) throw new Error(`Failed to create key on Outline server. Status: ${createKeyResponse.status}`);
         const keyData = await createKeyResponse.json();
-
-        await fetch(`<span class="math-inline">\{outlineApiUrl\}/access\-keys/</span>{keyData.id}/name`, {
+        
+        await fetch(`${outlineApiUrl}/access-keys/${keyData.id}/name`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name: `<span class="math-inline">\{email\}\-</span>{planName}` }),
+            body: JSON.stringify({ name: `${email}-${planName}` }),
             agent: httpsAgent 
         });
 
@@ -56,14 +52,14 @@ async function createSubscription(orderDescription, paymentId) {
         if (duration === 'Monthly') endDate.setMonth(endDate.getMonth() + 1);
         else if (duration === '6 Months') endDate.setMonth(endDate.getMonth() + 6);
         else if (duration === 'Yearly') endDate.setFullYear(endDate.getFullYear() + 1);
-
+        
         await db.query(
             'INSERT INTO subscriptions (email, access_key, plan_name, plan_duration, server_location, end_date, payment_id) VALUES ($1, $2, $3, $4, $5, $6, $7)',
             [email, keyData.accessUrl, planName, duration, serverLocation, endDate, paymentId.toString()]
         );
         console.log(`Successfully created subscription for ${email}`);
     } catch (error) {
-        console.error('Error in subscription creation:', error);
+        console.error('Error during subscription creation:', error);
     }
 }
 
@@ -86,35 +82,12 @@ app.post('/api/create-nowpayments', async (req, res) => {
     } catch (error) { res.status(500).json({ message: error.message }); }
 });
 
-app.post('/api/create-freekassa', (req, res) => {
-    const { planName, duration, price, email, serverLocation } = req.body;
-    const orderId = `MWEBS-FK-${Date.now()}`;
-    const orderDescription = `${planName} - ${duration} for ${email} on ${serverLocation}`;
-    const signString = `<span class="math-inline">\{FREEKASSA\_MERCHANT\_ID\}\:</span>{price}:<span class="math-inline">\{FREEKASSA\_SECRET\_WORD\_1\}\:</span>{orderId}`;
-    const sign = crypto.createHash('md5').update(signString).digest('hex');
-    const params = new URLSearchParams({
-        m: FREEKASSA_MERCHANT_ID, oa: price, o: orderId, s: sign,
-        us_email: email, us_desc: encodeURIComponent(orderDescription)
-    });
-    const paymentUrl = `https://pay.freekassa.ru/?${params.toString()}`;
-    res.status(200).json({ invoice_url: paymentUrl });
-});
-
 app.post('/api/nowpayments-callback', async (req, res) => {
     const { payment_status, payment_id, order_description } = req.body;
     if (payment_status === 'finished') {
         await createSubscription(order_description, payment_id);
     }
     res.status(200).send('Webhook received.');
-});
-
-app.post('/api/freekassa-callback', async (req, res) => {
-    const { MERCHANT_ORDER_ID, AMOUNT, intid, us_desc, SIGN } = req.body;
-    const signString = `<span class="math-inline">\{FREEKASSA\_MERCHANT\_ID\}\:</span>{AMOUNT}:<span class="math-inline">\{FREEKASSA\_SECRET\_WORD\_2\}\:</span>{MERCHANT_ORDER_ID}`;
-    const sign = crypto.createHash('md5').update(signString).digest('hex');
-    if (sign !== SIGN) { return res.status(400).send("Signature validation failed."); }
-    await createSubscription(us_desc, intid);
-    res.status(200).send("YES");
 });
 
 app.get('/api/get-keys', async (req, res) => {
@@ -143,7 +116,7 @@ async function cleanupExpiredKeys() {
             if (!outlineApiUrl) { console.error(`Invalid server location: ${sub.server_location}`); continue; }
             const keyId = sub.access_key.split('/').pop();
             if (keyId) {
-                const deleteResponse = await fetch(`<span class="math-inline">\{outlineApiUrl\}/access\-keys/</span>{keyId}`, { method: 'DELETE', agent: httpsAgent });
+                const deleteResponse = await fetch(`${outlineApiUrl}/access-keys/${keyId}`, { method: 'DELETE', agent: httpsAgent });
                 if (deleteResponse.ok) {
                     console.log(`Successfully deleted key ${keyId} for ${sub.email}.`);
                     await db.query("UPDATE subscriptions SET status = 'expired' WHERE id = $1", [sub.id]);
