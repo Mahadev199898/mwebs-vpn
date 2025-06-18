@@ -23,7 +23,7 @@ const createTable = async () => {
     await pool.query(queryText);
     console.log('"subscriptions" table is ready.');
   } catch (err) {
-    console.error('Error creating subscriptions table:', err);
+    console.error('FATAL: Error creating subscriptions table:', err);
     process.exit(1);
   }
 };
