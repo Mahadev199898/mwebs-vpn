@@ -1,7 +1,7 @@
 {
-  "name": "mwebs-vpn-linode",
+  "name": "mwebs-vpn-stable",
   "version": "1.0.0",
-  "description": "Advanced VPN Service Website for Linode",
+  "description": "VPN Service Website",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
@@ -13,6 +13,7 @@
     "pg": "^8.11.5",
     "node-fetch": "^2.7.0",
     "dotenv": "^16.4.5",
-    "node-cron": "^3.0.3"
+    "node-cron": "^3.0.3",
+    "pm2": "^5.4.0"
   }
 }
