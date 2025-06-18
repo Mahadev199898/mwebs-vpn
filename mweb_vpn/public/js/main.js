@@ -1,5 +1,5 @@
 // FINAL, COMPLETE, and CORRECTED main.js
-
+alert("Testing if main.js is running!");
 document.addEventListener('DOMContentLoaded', () => {
     // Navigation logic to highlight the active page link
     const currentPage = window.location.pathname;
