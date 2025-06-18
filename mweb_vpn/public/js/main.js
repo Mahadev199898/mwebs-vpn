@@ -1,16 +1,33 @@
-// Fully updated main.js
-document.addEventListener('DOMContentLoaded', () => {
-    // ... navigation logic is unchanged ...
+// FINAL, COMPLETE, and CORRECTED main.js
 
-    const path = window.location.pathname;
-    if (path.includes('pricing.html') || path === '/' || path.endsWith('index.html')) {
-        const pricingContainer = document.querySelector('.pricing-container');
-        if(pricingContainer) handlePricingPageV3(); // Use new version
+document.addEventListener('DOMContentLoaded', () => {
+    // Navigation logic to highlight the active page link
+    const currentPage = window.location.pathname;
+    const navLinks = document.querySelectorAll('.main-header nav a');
+    navLinks.forEach(link => {
+        // Use endsWith to correctly match pages like /pricing.html
+        if (link.getAttribute('href').endsWith(currentPage)) {
+            link.classList.add('active');
+        }
+    });
+    // For the homepage link, handle the root path
+    if (currentPage === '/' || currentPage.endsWith('index.html')) {
+        const homeLink = document.querySelector('.main-header nav a[href="/"]');
+        if(homeLink) homeLink.classList.add('active');
     }
-    // ... other page handlers are unchanged ...
+
+    // --- Page-specific Logic ---
+    // This runs the correct function depending on which page is loaded
+    if (currentPage.includes('pricing.html')) {
+        handlePricingPage();
+    } else if (currentPage.includes('account.html')) {
+        handleAccountPage();
+    } else if (currentPage.includes('admin.html')) {
+        handleAdminPage();
+    }
 });
 
-function handlePricingPageV3() {
+function handlePricingPage() {
     const modal = document.getElementById('checkout-modal');
     if (!modal) return;
     const closeButton = document.querySelector('.close-button');
@@ -30,7 +47,7 @@ function handlePricingPageV3() {
                 duration: option.dataset.duration,
                 price: parseFloat(option.dataset.price)
             };
-            summaryText.textContent = `You have selected the ${selectedPlan.planName} (${selectedPlan.duration}) for $${selectedPlan.price}.`;
+            summaryText.textContent = `You have selected the <span class="math-inline">\{selectedPlan\.planName\} \(</span>{selectedPlan.duration}) for $${selectedPlan.price}.`;
             modal.style.display = 'flex';
         });
     });
@@ -55,7 +72,7 @@ function handlePricingPageV3() {
         }
         buttonElement.textContent = 'Processing...';
         buttonElement.disabled = true;
-        freekassaButton.disabled = true; // Disable both buttons
+        freekassaButton.disabled = true;
         nowPaymentsButton.disabled = true;
 
         try {
@@ -79,4 +96,27 @@ function handlePricingPageV3() {
     }
 }
 
-// ... All other functions (handleAccountPage, handleAdminPage) remain unchanged ...
+function handleAccountPage() {
+    const accountDetails = document.getElementById('account-details');
+    if (!accountDetails) return;
+    const email = localStorage.getItem('mwebs_user_email');
+    if (!email) {
+        accountDetails.innerHTML = `<h3>Could not find user data.</h3><p>Please complete a purchase to see your keys, or enter your email below to search.</p>
+        <div style="margin-top: 1rem; max-width: 400px; margin-left: auto; margin-right: auto; text-align: left;">
+            <input type="email" id="search-email-input" placeholder="Enter your email to find keys" style="width: 100%; padding: 10px; margin-bottom: 1rem; background: rgba(0,0,0,0.3); border: 1px solid var(--primary-accent); color: white; font-family: var(--font-body);">
+            <button id="find-keys-button" class="cta-button" style="width: 100%;">Find My Keys</button>
+        </div>`;
+        document.getElementById('find-keys-button').addEventListener('click', () => {
+            const searchEmail = document.getElementById('search-email-input').value;
+            if (searchEmail) { localStorage.setItem('mwebs_user_email', searchEmail); window.location.reload(); }
+        });
+        return;
+    }
+    accountDetails.innerHTML = `<p>Fetching active subscriptions for ${email}...</p>`;
+    fetch(`/api/get-keys?email=${email}`).then(res => res.json()).then(subscriptions => {
+        if (subscriptions.error) throw new Error(subscriptions.error);
+        if (subscriptions.length === 0) { accountDetails.innerHTML = `<h3>No subscriptions found for ${email}.</h3>`; return; }
+        let html = '<h3>Your Active Keys</h3>';
+        subscriptions.forEach(sub => {
+            const expiryDate = new Date(sub.end_date).toLocaleDateString();
+            html += `<div class="subscription-card"><h4>${sub.plan_name} - ${sub.server_location}</h4><p><strong>Status:</strong> ${sub.plan_duration}</p><p><strong>Expires on:</strong> <span class="math-inline">\{expiryDate\}</p\><div class\="key\-display"\></span>{sub.
