@@ -9,25 +9,84 @@
 </head>
 <body>
     <div class="container">
+        <header class="main-header">
+            <a href="/" class="logo">MWEBS_</a>
+            <nav>
+                <a href="/how-to-use.html">How To Use</a>
+                <a href="/account.html">My Account</a>
+            </nav>
+        </header>
+
         <main>
+            <h2>Choose Your Transmission</h2>
+            <p>Select a plan to secure your connection. All plans are a one-time payment for the selected duration.</p>
+            
+            <div class="pricing-container">
+                <div class="plan-tier">
+                    <h3>Scout Plan</h3><p class="plan-devices">2 Devices</p>
+                    <div class="duration-option" data-plan-name="Scout Plan" data-duration="Monthly" data-price="4.00"><span class="duration">Monthly</span><span class="price">$4</span></div>
+                    <div class="duration-option" data-plan-name="Scout Plan" data-duration="6 Months" data-price="20.00"><span class="duration">6 Months</span><span class="price">$20</span></div>
+                    <div class="duration-option" data-plan-name="Scout Plan" data-duration="Yearly" data-price="35.00"><span class="duration">Yearly</span><span class="price">$35</span></div>
+                </div>
+                <div class="plan-tier popular">
+                    <h3>Guardian Plan</h3><p class="plan-devices">4 Devices</p>
+                    <div class="duration-option" data-plan-name="Guardian Plan" data-duration="Monthly" data-price="6.00"><span class="duration">Monthly</span><span class="price">$6</span></div>
+                    <div class="duration-option" data-plan-name="Guardian Plan" data-duration="6 Months" data-price="30.00"><span class="duration">6 Months</span><span class="price">$30</span></div>
+                    <div class="duration-option" data-plan-name="Guardian Plan" data-duration="Yearly" data-price="50.00"><span class="duration">Yearly</span><span class="price">$50</span></div>
+                </div>
+                <div class="plan-tier">
+                    <h3>Vanguard Plan</h3><p class="plan-devices">6 Devices</p>
+                    <div class="duration-option" data-plan-name="Vanguard Plan" data-duration="Monthly" data-price="8.00"><span class="duration">Monthly</span><span class="price">$8</span></div>
+                    <div class="duration-option" data-plan-name="Vanguard Plan" data-duration="6 Months" data-price="40.00"><span class="duration">6 Months</span><span class="price">$40</span></div>
+                    <div class="duration-option" data-plan-name="Vanguard Plan" data-duration="Yearly" data-price="70.00"><span class="duration">Yearly</span><span class="price">$70</span></div>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>Feature Comparison</h2>
+                <table class="comparison-table">
+                    <thead>
+                        <tr><th>Feature</th><th>Scout Plan</th><th>Guardian Plan</th><th>Vanguard Plan</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Simultaneous Devices</td><td>2</td><td>4</td><td>6</td></tr>
+                        <tr><td>Server Locations</td><td class="checkmark">✓</td><td class="checkmark">✓</td><td class="checkmark">✓</td></tr>
+                        <tr><td>Warp-Speed Network</td><td class="checkmark">✓</td><td class="checkmark">✓</td><td class="checkmark">✓</td></tr>
+                        <tr><td>Priority Support</td><td>-</td><td class="checkmark">✓</td><td class="checkmark">✓</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="content-section">
+                <h2>Our Commitment to Security</h2>
+                <div class="trust-signals">
+                    <div class="trust-signal-item"><h4>Zero-Log Policy</h4><p>We do not collect, monitor, or store any logs of your activity. Your Browse history is yours alone.</p></div>
+                    <div class="trust-signal-item"><h4>AES-256 Encryption</h4><p>Your connection is secured with military-grade encryption, making your data unreadable to third parties.</p></div>
+                    <div class="trust-signal-item"><h4>Anonymous Payments</h4><p>By using cryptocurrency for payments, your identity remains private and unlinked to your subscription.</p></div>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>Frequently Asked Questions</h2>
+                <div class="faq-item"><h4>Is this a recurring subscription?</h4><p>No. All plans are a one-time payment for the duration selected. Your key will simply expire at the end of the term. You can purchase a new plan at any time.</p></div>
+                <div class="faq-item"><h4>What cryptocurrencies do you accept?</h4><p>We accept a wide range of popular cryptocurrencies, including BTC, ETH, USDT, USDC, BNB, and SOL through our secure payment partners.</p></div>
+                <div class="faq-item"><h4>What is Outline?</h4><p>Outline is a free and open-source software that provides a secure and reliable way to run your own VPN server. We use it to provide you with your personal access key.</p></div>
+            </div>
+
             <div id="checkout-modal" class="modal">
                 <div class="modal-content">
                     <span class="close-button">&times;</span>
                     <h3>Final Confirmation</h3>
                     <p id="modal-summary">Confirm your plan details.</p>
-                    
                     <label for="server-location">Choose Server Location:</label>
                     <select id="server-location">
                         <option value="USA">USA</option>
                         <option value="Germany">Germany</option>
                         <option value="Singapore">Singapore</option>
                     </select>
-
                     <label for="email-input">Enter Your Email:</label>
                     <input type="email" id="email-input" placeholder="you@example.com" required>
-                    
-                    <p style="text-align: center; font-size: 0.9rem; margin-top: 1.5rem; opacity: 0.7;">Choose your payment method:</p>
-                    <div style="display: flex; gap: 1rem; margin-top: 0.5rem;">
+                    <div style="display: flex; gap: 1rem; margin-top: 1rem;">
                         <button id="nowpayments-pay-button" class="cta-button" style="flex: 1;">Pay with Crypto</button>
                         <button id="freekassa-pay-button" class="cta-button" style="flex: 1;">Pay with FreeKassa</button>
                     </div>
@@ -35,6 +94,16 @@
             </div>
         </main>
     </div>
+
+    <footer class="main-footer">
+        <p>&copy; 2025 MWEBS. All Rights Reserved. The Future is Secure.</p>
+        <p style="margin-top: 1rem; opacity: 0.8;">
+            <a href="/terms.html">Terms of Service</a> | 
+            <a href="/privacy.html">Privacy Policy</a> | 
+            <a href="/refund.html">Refund Policy</a> | 
+            <a href="mailto:support@mwebs.io">Support</a>
+        </p>
+    </footer>
     <script src="/js/main.js"></script>
 </body>
 </html>
